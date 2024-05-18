@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalp Hastalığı Tahmini</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(0deg, #fff 0%, #82C0C4 100%);
+            color: black; /* Set the text color to black */
+        }
+
+        .container {
+            max-width: 600px; /* Increased width for desktop */
+            background: #fff;
+            border-radius: 40px;
+            padding: 35px;
+            border: 5px solid #fff;
+            box-shadow: 0px 30px 30px -20px rgba(133, 189, 215, 0.878);
+        }
+
+        .heading {
+            text-align: center;
+            font-weight: 900;
+            font-size: 36px; /* Increased font size */
+            color: #1089d3;
+            margin-bottom: 30px;
+        }
+
+        .form {
+            display: grid; /* Use grid for layout */
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 20px; /* Space between input boxes */
+        }
+
+        .form label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold; /* Make labels bold */
+        }
+
+        .form input[type="text"] {
+            width: 80%;
+            background: #f0f8ff; /* Light blue background */
+            border: 2px solid #e0f0ff; /* Light blue border */
+            padding: 15px 20px;
+            margin-right: 10px;
+            border-radius: 20px;
+            box-shadow: 0px 5px 5px -3px #cff0ff;
+            transition: border-color 0.3s;
+            font-size: 14px; /* Adjust font size */
+            color: black; /* Set input text color to black */
+        }
+
+        .form input[type="text"]:focus {
+            outline: none;
+            border-color: #12b1d1; 
+        }
+
+        .form input[type="text"]::placeholder {
+            color: #aaa;
+        }
+
+        .sparkle-button {
+            position: relative;
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #1089d3;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+            transition: background-color 0.3s;
+            grid-column: span 2; /* Button spans both columns */
+        }
+
+        .sparkle-button:hover {
+            background-color: #0d73b1;
+        }
+
+        .sparkle-button .text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .prediction {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+            color: black; /* Set prediction text color to black */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"> 
+        <div class="heading"><i class="fas fa-heartbeat"></i> Kalp Hastalığı Tahmini</div> 
+        <form action="{{ url_for('predict')}}" method="post" class="form">
+            <label for="age">Yaş:</label>
+            <input type="text" id="age" name="age" placeholder="Yaş" required> 
+            <label for="sex">Cinsiyet (0 kadın, 1 erkek):</label>
+            <input type="text" id="sex" name="sex" placeholder="Cinsiyet" required>
+            <label for="cp">Göğüs Ağrısı Türü:</label>
+            <input type="text" id="cp" name="cp" placeholder="cp" required>
+            <label for="trestbps">Dinlenme Kan Basıncı:</label>
+            <input type="text" id="trestbps" name="trestbps" placeholder="trestbps" required>
+            <label for="chol">Kolesterol:</label>
+            <input type="text" id="chol" name="chol" placeholder="chol" required>
+            <label for="fbs">Açlık Kan Şekeri:</label>
+            <input type="text" id="fbs" name="fbs" placeholder="fbs" required>
+            <label for="restecg">Dinlenme EKG Sonuçları:</label>
+            <input type="text" id="restecg" name="restecg" placeholder="restecg" required>
+            <label for="thalach">Maksimum Kalp Atış Hızı:</label>
+            <input type="text" id="thalach" name="thalach" placeholder="thalach" required>
+            <label for="exang">Egzersize Bağlı Angina:</label>
+            <input type="text" id="exang" name="exang" placeholder="exang" required>
+            <label for="oldpeak">ST Depresyonu:</label>
+            <input type="text" id="oldpeak" name="oldpeak" placeholder="oldpeak" required>
+            <label for="slope">ST Segmentinin Eğimi:</label>
+            <input type="text" id="slope" name="slope" placeholder="slope" required>
+            <label for="ca">Büyük Damar Sayısı (0-3):</label>
+            <input type="text" id="ca" name="ca" placeholder="ca" required>
+            <label for="thal">Talasemi:</label>
+            <input type="text" id="thal" name="thal" placeholder="thal" required>
+            <button type="submit" class="sparkle-button">
+                <span class="text">Tahmin Et</span>
+            </button>
+            <div class="prediction">{{ prediction_text }}</div>
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+ <div class="login">
+    <h1 style="color:Violet;">Kalp hastalığı tahmini</h1>
+
+    <!-- Eylem, verilerin gönderildiği yerdir. Bizim durumumuzda tahmin sayfası.
+    Eğer eylem belirtilmezse, mevcut sayfa kabul edilir 
+    <div class = "container" "width: 100%; margin-top: 5%; display: flex; align-items: center; justify-content: center;">
+        <div class = "model" style="width: 700px; height: 400px; background-color: #564e58; box-shadow: 0px 10px 10px 10px #857a7a; border-radius: 10px;">
+            <form action="{{ url_for('predict')}}" method="post" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-width: 45vw; min-height: 40vh;">
+                <label for="age">Yaş:</label>
+                <input type="text" id="age" name="age" placeholder="Yaş" required="required" /><br>
+        
+                <label for="sex">Cinsiyet (0 kadın, 1 erkek):</label>
+                <input type="text" id="sex" name="sex" placeholder="Cinsiyet" required="required" /><br>
+        
+                <label for="cp">Göğüs Ağrısı Türü:</label>
+                <input type="text" id="cp" name="cp" placeholder="cp" required="required" /><br>
+        
+                <label for="trestbps">Dinlenme Kan Basıncı:</label>
+                <input type="text" id="trestbps" name="trestbps" placeholder="trestbps" required="required" /><br>
+        
+                <label for="chol">Kolesterol:</label>
+                <input type="text" id="chol" name="chol" placeholder="chol" required="required" /><br>
+                
+                <label for="fbs">Açlık Kan Şekeri:</label>
+                <input type="text" id="fbs" name="fbs" placeholder="fbs" required="required" /><br>
+            
+                <label for="restecg">Dinlenme Elektrokardiyografik Sonuçlar:</label>
+                <input type="text" id="restecg" name="restecg" placeholder="restecg" required="required" /><br>
+        
+                <label for="thalach">Maksimum Kalp Atış Hızı:</label>
+                <input type="text" id="thalach" name="thalach" placeholder="thalach" required="required" /><br>
+        
+                <label for="exang">Egzersize Bağlı Angina:</label>
+                <input type="text" id="exang" name="exang" placeholder="exang" required="required" /><br>
+        
+                <label for="oldpeak">Dinlenmeye Göre Egzersizle İndüklenen ST Depresyonu:</label>
+                <input type="text" id="oldpeak" name="oldpeak" placeholder="oldpeak" required="required" /><br>
+        
+                <label for="slope">Tepe Egzersizi ST Segmentinin Eğimi:</label>
+                <input type="text" id="slope" name="slope" placeholder="slope" required="required" /><br>
+        
+                <label for="ca">Floroskopi ile Renklendirilmiş Büyük Damar Sayısı (0-3):</label>
+                <input type="text" id="ca" name="ca" placeholder="ca" required="required" /><br>
+        
+                <label for="thal">Talasemi:</label>
+                <input type="text" id="thal" name="thal" placeholder="thal" required="required" /><br>
+
+                <button type="submit" class="btn btn-primary btn-block btn-large">Kalp hastalığı olan nüfus yüzdesini tahmin et</button></p>
+            </form>
+        </div>
+    </div>
+    
+
+   <br>
+   <br>
+   <h4 style="color:Violet;">{{ prediction_text }}</h4>
+ </div>
+
+</body>
+</html>
+-->
